@@ -16,22 +16,22 @@ var config = {
         let blood_group = document.getElementById("blood_group").value;
         let phone_number = document.getElementById("phone_number").value;
         let present_address = document.getElementById("present_address").value;
-        let permanent_address = document.getElementById("permanent_address").value;
+        let city = document.getElementById("permanent_address").value;
         let nid_number = document.getElementById("nid_number").value;
 
         firebase.auth().createUserWithEmailAndPassword(email_address, user_password)
         .then(user => {
 
-            var key = firebase.database().ref().child('users').push().key;
+          //  var key = firebase.database().ref().child('users').push().key;
+          var key = user.user.uid;
             firebase.database().ref('users/' + key).set({
                 id : key,
-                uid : user.user.uid,
                 username: full_name,
                 email: email_address,
                 gender : gender,
                 phone_number : phone_number,
                 present_address : present_address,
-                permanent_address : permanent_address,
+                city : city,
                 nid_number : nid_number,
                 blood_group:blood_group
             });
@@ -47,7 +47,7 @@ var config = {
       });        
     }
 
-    function login(){
+    function userLogin(){
         let email_address = document.getElementById("email_address").value;
         let user_password = document.getElementById("user_password").value;
         firebase.auth().signInWithEmailAndPassword(email_address, user_password).catch(function(error) {
@@ -65,3 +65,18 @@ var config = {
             console.error('Sign Out Error', error);
           });
     } 
+
+
+    $(document).ready(function(){
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user) {
+              console.log("1 ==> ");
+                console.log(user);
+                 window.location.href = "index.html";
+            } else {
+              // No user is signed in.
+            }
+          });
+    });
+    
+    
